@@ -1,0 +1,39 @@
+spring:
+
+  application:
+    name: product-catalog-caching-service
+
+
+  datasource:
+    url: jdbc:h2:mem:catalogdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+
+
+  jpa:
+
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+
+      ddl-auto: update
+    properties:
+      hibernate:
+
+        show_sql: true
+        format_sql: true
+
+
+  cache:
+    type: redis
+
+
+server:
+  port: 8080
+
+
+postgres:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/catalog_db
+    username: postgres_user
+    password: postgres_password
