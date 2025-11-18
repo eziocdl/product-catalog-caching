@@ -1,0 +1,21 @@
+FROM eclipse-temurin:21-jdk-alpine US build
+WORKDIR / app
+COPY pom.xml .
+COPY src src
+RUN --mount=type=cache,target=/root/.m2 mvn clean install -DskipTests
+RUN mvn package --DskipTests
+
+# Runtime
+FROM eclipse-temurin:21-jre-alpine
+
+ARG JAR_ILE=target/product-catalog-api.jar
+
+COPY --from=build /app/target/*.jar ${JAR_FILE}
+
+# Spring Port
+EXPOSE 8080
+
+# spring init
+
+ENTRYPOINT ["java", "-jar", "/target/product-catalog-api.jar"]
+

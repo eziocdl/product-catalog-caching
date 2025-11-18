@@ -1,0 +1,46 @@
+version: '3.8'
+# Spring Boot Application
+services:
+  app:
+    build: .
+    container_name: catalog-api
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      # connect postgresql
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/catalog_db
+      SPRING_DATASOURCE_USERNAME: postgres_user
+      SPRING_DATASOURCE_PASSWORD: postgres_password
+
+      # connect redis
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+
+# PostgreSQL database
+  postgres:
+    image: postgres:15-alpine
+    container_name: catalog-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: catalog_db
+      POSTGRES_USER: postgres_user
+      POSTGRES_PASSWORD: postgres_password
+
+# Redis cache
+  redis:
+    image: redis:7-alpine
+    container_name: catalog-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data/data/
+
+# Data Persistence
+volumes:
+  postgres_data:
+  redis_data:
+
