@@ -1,14 +1,13 @@
 package com.github.eziocdl.catalog.api.controller;
 
-import com.github.eziocdl.catalog.application.command.dto.CreateProductCommand;
 import com.github.eziocdl.catalog.application.command.handler.CreateProductCommandHandler;
-import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
+import com.github.eziocdl.catalog.application.query.dto.ProductDetailQuery;
+import com.github.eziocdl.catalog.application.query.handler.GetProductByIdQueryHandler;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable; // <-- Novo Import
 
 import java.util.UUID;
 
@@ -17,18 +16,21 @@ import java.util.UUID;
 public class ProductController {
 
     private final CreateProductCommandHandler createProductCommandHandler;
+    private final GetProductByIdQueryHandler getProductByIdQueryHandler; // <-- Adicionar
 
-    // Injection to handler (CQRS)
-
-    public ProductController(CreateProductCommandHandler createProductCommandHandler) {
+    // Ajuste no Construtor para injeção de ambos os Handlers (Command e Query)
+    public ProductController(
+            CreateProductCommandHandler createProductCommandHandler,
+            GetProductByIdQueryHandler getProductByIdQueryHandler
+    ) {
         this.createProductCommandHandler = createProductCommandHandler;
+        this.getProductByIdQueryHandler = getProductByIdQueryHandler;
     }
 
-    @PostMapping
-    public ResponseEntity<UUID> createProduct(@RequestBody @Valid CreateProductCommand command) {
-        UUID productId = createProductCommandHandler.handle(command);
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductDetailQuery> getProductById(@PathVariable UUID id) {
+        ProductDetailQuery queryResult = getProductByIdQueryHandler.handle(id);
+        return ResponseEntity.ok(queryResult);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(productId);
     }
-
 }
