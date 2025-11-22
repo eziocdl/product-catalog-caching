@@ -37,3 +37,12 @@ postgres:
     url: jdbc:postgresql://localhost:5432/catalog_db
     username: postgres_user
     password: postgres_password
+
+management:
+  endpoints:
+    web:
+      exposure:
+       include: "health,info,metrics,prometheus"
+  endpoint:
+    health:
+     show-details: always
