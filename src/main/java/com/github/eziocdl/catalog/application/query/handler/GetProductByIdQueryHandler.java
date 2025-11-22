@@ -4,6 +4,7 @@ package com.github.eziocdl.catalog.application.query.handler;
 import com.github.eziocdl.catalog.application.query.dto.ProductDetailQuery;
 import com.github.eziocdl.catalog.domain.entity.Product;
 import com.github.eziocdl.catalog.domain.repository.ProductRepository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -17,9 +18,11 @@ public class GetProductByIdQueryHandler {
         this.productRepository = productRepository;
     }
 
+    @Cacheable(value = "products", key = "#productID")
+
     public ProductDetailQuery handle(UUID productID) {
 
-        Product product = productRepository.findById(productId)
+        Product product = productRepository.findById(productID) // to do
                 .orElseThrow(() -> new RuntimeException("Product not Found"));
 
         return  new ProductDetailQuery(
