@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
-@Service // Marca a classe como um serviço Spring
+@Service
 public class CreateProductCommandHandler {
 
     private final ProductRepository productRepository;
@@ -16,7 +16,7 @@ public class CreateProductCommandHandler {
     public CreateProductCommandHandler(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
-    @CacheEvict(value = "products", key = "#result.id")
+   
     public UUID handle(CreateProductCommand command) {
 
         Product product = new Product(

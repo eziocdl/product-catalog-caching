@@ -1,6 +1,5 @@
 package com.github.eziocdl.catalog.application.query.handler;
 
-
 import com.github.eziocdl.catalog.application.query.dto.ProductDetailQuery;
 import com.github.eziocdl.catalog.domain.entity.Product;
 import com.github.eziocdl.catalog.domain.repository.ProductRepository;
@@ -14,18 +13,17 @@ public class GetProductByIdQueryHandler {
 
     private final ProductRepository productRepository;
 
-    public GetProductByIdQueryHandler(ProductRepository productRepository ) {
+    public GetProductByIdQueryHandler(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
-    @Cacheable(value = "products", key = "#productID")
 
-    public ProductDetailQuery handle(UUID productID) {
-
-        Product product = productRepository.findById(productID) // to do
+    @Cacheable(value = "products", key = "#id")
+    public ProductDetailQuery handle(UUID id) {
+        Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not Found"));
 
-        return  new ProductDetailQuery(
+        return new ProductDetailQuery(
                 product.getId(),
                 product.getName(),
                 product.getPrice()

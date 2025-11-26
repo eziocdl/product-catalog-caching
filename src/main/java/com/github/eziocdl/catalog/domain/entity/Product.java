@@ -22,16 +22,16 @@ public class Product {
     private final String name;
     private final BigDecimal price;
 
-    // Construtor obrigatório do JPA (protected para evitar uso fora do Framework)
+
     protected Product() {
-        // Inicializa campos final para satisfazer o compilador Java
+
         this.id = null;
         this.name = null;
         this.price = null;
     }
 
     public Product(UUID id, String name, BigDecimal price) {
-        // ... (validações de preço e nome aqui)
+
         if (price == null || price.compareTo(BigDecimal.ZERO) <= 0) {
             throw new DomainValidationException("Price must be greater than zero.");
         }
@@ -39,7 +39,7 @@ public class Product {
             throw new DomainValidationException("Product name cannot be null or empty.");
         }
 
-        // Se passar nas regras, o objeto é criado (Imutabilidade)
+
         this.id = id != null ? id : UUID.randomUUID();
         this.name = name;
         this.price = price;
