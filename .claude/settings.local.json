@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mvn clean compile:*)",
+      "Bash(mvn test:*)",
+      "Bash(git -C /Users/eziolima/intellij/product-catalog-api status)",
+      "Bash(git -C /Users/eziolima/intellij/product-catalog-api diff --stat HEAD)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

@@ -9,10 +9,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -22,7 +24,6 @@ public class ProductController {
 
     private final CreateProductCommandHandler createProductCommandHandler;
     private final GetProductByIdQueryHandler getProductByIdQueryHandler;
-
 
     public ProductController(CreateProductCommandHandler createProductCommandHandler,
                              GetProductByIdQueryHandler getProductByIdQueryHandler) {
@@ -38,9 +39,18 @@ public class ProductController {
             @ApiResponse(responseCode = "400", description = "Invalid input data (e.g., negative price, empty name)"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
-    public ResponseEntity<Void> createProduct(@RequestBody @Valid CreateProductCommand command) {
-        createProductCommandHandler.handle(command);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<Map<String, UUID>> createProduct(@RequestBody @Valid CreateProductCommand command) {
+        UUID productId = createProductCommandHandler.handle(command);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(productId)
+                .toUri();
+
+        return ResponseEntity
+                .created(location)
+                .body(Map.of("id", productId));
     }
 
     @GetMapping("/{id}")

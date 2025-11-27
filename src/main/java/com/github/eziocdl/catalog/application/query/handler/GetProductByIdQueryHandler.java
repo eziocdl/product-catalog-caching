@@ -17,7 +17,6 @@ public class GetProductByIdQueryHandler {
         this.productRepository = productRepository;
     }
 
-
     @Cacheable(value = "products", key = "#id")
     public ProductDetailQuery handle(UUID id) {
         Product product = productRepository.findById(id)
